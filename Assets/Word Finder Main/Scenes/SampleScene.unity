@@ -1913,6 +1913,7 @@ GameObject:
   - component: {fileID: 666752052}
   - component: {fileID: 666752051}
   - component: {fileID: 666752050}
+  - component: {fileID: 666752053}
   m_Layer: 5
   m_Name: Keyboard Container
   m_TagString: Untagged
@@ -2007,6 +2008,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 666752048}
   m_CullTransparentMesh: 1
+--- !u!114 &666752053
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 666752048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb4c2735efb088743bee8049969d5b8d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &813056657
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5654,6 +5667,7 @@ MonoBehaviour:
   - {fileID: 2073048677}
   - {fileID: 159673233}
   enterButton: {fileID: 469327705}
+  keyboardColorizer: {fileID: 666752053}
 --- !u!4 &1903667720
 Transform:
   m_ObjectHideFlags: 0
