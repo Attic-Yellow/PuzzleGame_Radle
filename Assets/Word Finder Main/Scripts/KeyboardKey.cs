@@ -5,6 +5,8 @@ using UnityEngine.UI;
 using TMPro;
 using System;
 
+enum Validity { None, Valid, Potential, Invalid } 
+
 public class KeyboardKey : MonoBehaviour
 {
 
@@ -12,6 +14,8 @@ public class KeyboardKey : MonoBehaviour
     [SerializeField] private Image renderer;
     [SerializeField] private TextMeshProUGUI letterText;
 
+    [Header(" Settings ")]
+    private Validity validity;
 
     [Header(" Events ")]
     public static Action<char> onKeyPressed;
@@ -20,7 +24,7 @@ public class KeyboardKey : MonoBehaviour
     void Start()
     {
         GetComponent<Button>().onClick.AddListener(SendKeyPressedEvent);
-
+        Initialize();
     }
 
     // Update is called once per frame
@@ -39,17 +43,32 @@ public class KeyboardKey : MonoBehaviour
         return letterText.text[0];
     }
 
+    public void Initialize()
+    {
+        renderer.color = Color.white;
+        validity = Validity.None;
+    }
+
     public void SetValid()
     {
         renderer.color = Color.green;
+        validity = Validity.Valid;
     }
 
     public void SetPotential()
     {
+        if (validity == Validity.Valid)
+            return;
+
         renderer.color = Color.yellow;
+        validity= Validity.Potential;
     }
     public void SetInvalid()
     {
+        if (validity == Validity.Valid || validity == Validity.Potential)
+            return;
+
         renderer.color = Color.gray;
+        validity= Validity.Invalid;
     }
 }
