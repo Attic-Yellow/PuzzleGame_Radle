@@ -32,13 +32,13 @@ public class DataManager : MonoBehaviour
         
     }
 
-    public void AddCons(int amount)
+    public void AddCoins(int amount)
     {
         coins += amount;
         SaveData();
     }
 
-    public void RemoveCons(int amount)
+    public void RemoveCoins(int amount)
     {
         coins -= amount;
         coins = Mathf.Max(coins, 0);
@@ -66,7 +66,7 @@ public class DataManager : MonoBehaviour
         return score;
     }
 
-    public int GetBsetScore()
+    public int GetBestScore()
     {
         return bestScore;
     }

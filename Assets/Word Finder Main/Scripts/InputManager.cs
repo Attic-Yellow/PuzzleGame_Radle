@@ -22,11 +22,27 @@ public class InputManager : MonoBehaviour
         Initialize();
 
         KeyboardKey.onKeyPressed += KeyPressedCallback;
+        GameManager.onGameStateChanged += GameStateChanegedCallback;
     }
 
     private void OnDestroy()
     {
         KeyboardKey.onKeyPressed -= KeyPressedCallback;
+        GameManager.onGameStateChanged -= GameStateChanegedCallback;
+    }
+
+    private void GameStateChanegedCallback(GameState gameState)
+    {
+        switch (gameState)
+        {
+            case GameState.Game:
+                Initialize();
+                break;
+
+            case GameState.LevelComplete:
+
+                break;
+        }
     }
 
     // Update is called once per frame
@@ -37,6 +53,11 @@ public class InputManager : MonoBehaviour
 
     private void Initialize()
     {
+        currentWordContaainerIndex = 0;
+        canAddLetter = true;
+
+        DisableEnterButton();
+
         for (int i = 0; i < wordContainers.Length; i++)
             wordContainers[i].Initialize();
     }
@@ -80,7 +101,16 @@ public class InputManager : MonoBehaviour
 
     private void SetLevelComplete()
     {
+        UpdateDate();
         GameManager.instance.SetGameState(GameState.LevelComplete);
+    }
+
+    private void UpdateDate()
+    {
+        int scoreToAdd = 6 - currentWordContaainerIndex;
+
+        DataManager.instance.IncreaseScore(scoreToAdd);
+        DataManager.instance.AddCoins(scoreToAdd * 3);
     }
 
     public void BackspacePressedCallback()

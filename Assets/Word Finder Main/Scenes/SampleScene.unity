@@ -430,6 +430,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameCG: {fileID: 1802514443}
   levelCompleteCG: {fileID: 1590141696}
+  levelCompleteCoins: {fileID: 898823852}
+  levelCompleteSecretWord: {fileID: 1475731682}
+  levelCompleteScore: {fileID: 1597355298}
+  levelCompleteBestScore: {fileID: 233150070}
+  gameScore: {fileID: 1775306724}
+  gameCoins: {fileID: 2130011857}
 --- !u!1001 &189530592
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -772,7 +778,7 @@ GameObject:
   - component: {fileID: 233150071}
   - component: {fileID: 233150070}
   m_Layer: 5
-  m_Name: Score Amount
+  m_Name: Best Score Amount
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3669,11 +3675,23 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 0
+  m_Interactable: 1
   m_TargetGraphic: {fileID: 919792101}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1729546910}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: NextNuuonCallback
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &919792101
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6838,9 +6856,9 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1590141694}
   m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
+  m_Alpha: 0
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
 --- !u!114 &1590141697
 MonoBehaviour:
@@ -10044,6 +10062,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3900338793603639745, guid: dd8d578c0a808e646913b09f0f192de9, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 05b5ac12bf43acb48a470c6d8d1ca77f, type: 2}
+    - target: {fileID: 3900338793603639745, guid: dd8d578c0a808e646913b09f0f192de9, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 710353090117293468, guid: 05b5ac12bf43acb48a470c6d8d1ca77f, type: 2}
     - target: {fileID: 5043841516409763179, guid: dd8d578c0a808e646913b09f0f192de9, type: 3}
       propertyPath: m_Enabled
       value: 1

@@ -39,4 +39,9 @@ public class GameManager : MonoBehaviour
     {
         
     }
+
+    public void NextNuuonCallback() 
+    {
+        SetGameState(GameState.Game);
+    }
 }
