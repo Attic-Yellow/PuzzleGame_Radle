@@ -81,7 +81,7 @@ public class UIManager : MonoBehaviour
     private void ShowGame()
     {
         gameCoins.text = DataManager.instance.GetCoins().ToString();
-        gameScore.text = DataManager.instance.GetCoins().ToString();
+        gameScore.text = DataManager.instance.GetScore().ToString();
         ShowCG(gameCG);
     }
 

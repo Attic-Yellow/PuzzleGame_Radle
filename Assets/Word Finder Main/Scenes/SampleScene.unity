@@ -2592,6 +2592,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   secretWord: FINAL
+  wordsText: {fileID: 4900000, guid: 4db4b365a17dba54cb9acaed6d4428b3, type: 3}
 --- !u!4 &494454561
 Transform:
   m_ObjectHideFlags: 0
