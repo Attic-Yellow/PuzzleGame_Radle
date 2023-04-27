@@ -40,9 +40,19 @@ public class GameManager : MonoBehaviour
         
     }
 
-    public void NextNuuonCallback() 
+    public void NextBuutonCallback() 
     {
         SetGameState(GameState.Game);
+    }
+
+    public void PlayBuutonCallback()
+    {
+        SetGameState(GameState.Game);
+    }
+
+    public void BackBuutonCallback()
+    {
+        SetGameState(GameState.Menu);
     }
 
     public bool IsGameState()
