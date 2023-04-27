@@ -88,14 +88,28 @@ public class InputManager : MonoBehaviour
         keyboardColorizer.Colorize(secretWord, wordToCheck);
 
         if (secretWord == wordToCheck)
+        {
             SetLevelComplete();
+        }
         else
         {
-            Debug.Log("Wrong Word");
-
-            canAddLetter = true;
-            DisableEnterButton();
+            //Debug.Log("Wrong Word");
             currentWordContaainerIndex++;
+            DisableEnterButton();
+
+            if (currentWordContaainerIndex >= wordContainers.Length)
+            {
+                //Debug.Log("Gameover");
+                DataManager.instance.ResetScore();
+                GameManager.instance.SetGameState(GameState.Gameover);
+            }
+            else
+            {
+                canAddLetter = true;
+                
+            }
+
+            
         }
     }
 
@@ -115,6 +129,9 @@ public class InputManager : MonoBehaviour
 
     public void BackspacePressedCallback()
     {
+        if (!GameManager.instance.IsGameState())
+            return;
+
         bool removedLetter = wordContainers[currentWordContaainerIndex].RemoveLetter();
 
         if (removedLetter)
