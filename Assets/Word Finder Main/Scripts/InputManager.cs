@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class InputManager : MonoBehaviour
 {
+    public static InputManager instance;
+
     [Header(" Elements ")]
     [SerializeField] private WordContainer[] wordContainers;
     [SerializeField] private Button enterButton;
@@ -14,7 +16,13 @@ public class InputManager : MonoBehaviour
     private int currentWordContaainerIndex;
     private bool canAddLetter = true;
 
-
+    public void Awake()
+    {
+        if (instance == null)
+            instance = this;
+        else
+            Destroy(gameObject);
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -148,5 +156,10 @@ public class InputManager : MonoBehaviour
     private void DisableEnterButton()
     {
         enterButton.interactable = false;
+    }
+
+    public WordContainer GetCurrentWordContainer()
+    {
+        return wordContainers[currentWordContaainerIndex];
     }
 }
