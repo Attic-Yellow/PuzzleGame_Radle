@@ -43,13 +43,13 @@ public class SettingsManager : MonoBehaviour
 
     private void EnableSounds()
     {
-        //SoundsManager.instance.EnableSounds();
-        soundsImage.color = Color.white;
+        SoundsManager.instance.EnableSounds();
+        soundsImage.color = Color.black;
     }
 
     private void DisableSounds()
     {
-        //SoundsManager.instance.DisableSounds();
+        SoundsManager.instance.DisableSounds();
         soundsImage.color = Color.gray;
     }
 
@@ -71,13 +71,13 @@ public class SettingsManager : MonoBehaviour
 
     private void EnableHaptics()
     {
-        //HapticsManager.instance.EnableHaptics();
-        hapticsImage.color = Color.white;
+        HapticsManager.instance.EnableHaptics();
+        hapticsImage.color = Color.black;
     }
 
     private void DisableHaptics()
     {
-        //HapticsManager.instance.DisableHaptics();
+        HapticsManager.instance.DisableHaptics();
         hapticsImage.color = Color.gray;
     }
 

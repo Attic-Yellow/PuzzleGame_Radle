@@ -33,6 +33,7 @@ public class WordContainer : MonoBehaviour
         currentLetterIndex = 0;
 
         for (int i = 0; i < letterContainers.Length; i++)
+            // 연결 되어 있음
             letterContainers[i].Initialize();
     }
 

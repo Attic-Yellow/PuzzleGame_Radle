@@ -700,8 +700,8 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -2547.0,
-            "y": 187.99998474121095,
+            "x": -2544.0,
+            "y": 188.0,
             "width": 208.0,
             "height": 326.0
         }
@@ -1477,7 +1477,7 @@
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
     "m_Value": {
-        "x": 0.5,
+        "x": 0.30000001192092898,
         "y": 1.0,
         "z": 0.0,
         "w": 0.0
@@ -2244,9 +2244,9 @@
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
     "m_Value": {
-        "r": 0.5251297354698181,
-        "g": 0.9150943160057068,
-        "b": 0.4963954985141754,
+        "r": 0.3471910059452057,
+        "g": 0.6000000238418579,
+        "b": 0.3269662857055664,
         "a": 0.0
     },
     "isMainColor": false,

@@ -4,6 +4,19 @@ using UnityEngine;
 
 public class HapticsManager : MonoBehaviour
 {
+    public static HapticsManager instance;
+
+    [Header(" Settings ")]
+    private bool haptics;
+
+    private void Awake()
+    {
+        if (instance == null)
+            instance = this;
+        else
+            Destroy(gameObject);
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -14,5 +27,28 @@ public class HapticsManager : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void EnableHaptics()
+    {
+        haptics = true;
+    }
+
+    public void DisableHaptics()
+    {
+        haptics = false;
+    }
+
+    public bool HapticsEnabled()
+    {
+        return haptics;
+    }
+
+    public static void Vibrate()
+    {
+        if(instance.HapticsEnabled())
+        {
+            // Taptic.Light
+        }
     }
 }

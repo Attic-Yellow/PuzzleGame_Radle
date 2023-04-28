@@ -50,15 +50,15 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Band_Amount: 20
+    - _Band_Amount: 2.7
     - _EnableExternalAlpha: 0
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _Speed: 0.05
+    - _Speed: 0.23
     m_Colors:
-    - _Background_Color: {r: 0.2392157, g: 0.7176471, b: 0.8, a: 0}
-    - _Band_Color: {r: 0.5251297, g: 0.9150943, b: 0.4963955, a: 0}
-    - _Band_Size: {r: 0.53, g: 1, b: 0, a: 0}
+    - _Background_Color: {r: 0.23874345, g: 0.6129144, b: 0.8, a: 0.69803923}
+    - _Band_Color: {r: 0.40392157, g: 0.46825886, b: 0.7490196, a: 0}
+    - _Band_Size: {r: 0.5, g: 1, b: 0, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}

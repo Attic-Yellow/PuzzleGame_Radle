@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class InputManager : MonoBehaviour
 {
@@ -17,6 +18,10 @@ public class InputManager : MonoBehaviour
     private bool canAddLetter = true;
     private bool shouldReset;
 
+    [Header(" Events ")]
+    public static Action onLetterAdded;
+    public static Action onLetterRemoved;
+
     public void Awake()
     {
         if (instance == null)
@@ -28,6 +33,7 @@ public class InputManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //연결되어 있음
         Initialize();
 
         KeyboardKey.onKeyPressed += KeyPressedCallback;
@@ -73,6 +79,7 @@ public class InputManager : MonoBehaviour
         DisableEnterButton();
 
         for (int i = 0; i < wordContainers.Length; i++)
+            // 연결 되어있음
             wordContainers[i].Initialize();
 
         shouldReset = false;
@@ -83,8 +90,9 @@ public class InputManager : MonoBehaviour
         if (!canAddLetter)
             return;
 
-
         wordContainers[currentWordContaainerIndex].Add(letter);
+
+        HapticsManager.Vibrate();
 
         if (wordContainers[currentWordContaainerIndex].IsComplete())
         {
@@ -93,6 +101,8 @@ public class InputManager : MonoBehaviour
             //CheckWord();
             //currentWordContaainerIndex++;
         }
+
+        onLetterAdded?.Invoke();
     }
 
     public void CheckWord()
@@ -154,6 +164,8 @@ public class InputManager : MonoBehaviour
             DisableEnterButton();
 
         canAddLetter = true;
+
+        onLetterAdded?.Invoke();
     }
 
     private void EnableEnterButton()
