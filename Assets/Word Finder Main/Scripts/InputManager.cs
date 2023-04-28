@@ -15,6 +15,7 @@ public class InputManager : MonoBehaviour
     [Header(" Settings ")]
     private int currentWordContaainerIndex;
     private bool canAddLetter = true;
+    private bool shouldReset;
 
     public void Awake()
     {
@@ -44,12 +45,17 @@ public class InputManager : MonoBehaviour
         switch (gameState)
         {
             case GameState.Game:
-                Initialize();
+                if(shouldReset)
+                    Initialize();
                 break;
 
             case GameState.LevelComplete:
-
+                shouldReset = true;
                 break;
+
+            case GameState.Gameover:
+                shouldReset = true;
+                    break;
         }
     }
 
@@ -68,6 +74,8 @@ public class InputManager : MonoBehaviour
 
         for (int i = 0; i < wordContainers.Length; i++)
             wordContainers[i].Initialize();
+
+        shouldReset = false;
     }
 
     private void KeyPressedCallback(char letter)

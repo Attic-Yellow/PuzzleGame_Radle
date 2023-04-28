@@ -11,6 +11,9 @@ public class WordManager : MonoBehaviour
     [SerializeField] private TextAsset wordsText;
     private string words;
 
+    [Header(" Settings ")]
+    private bool shouldReset;
+
     private void Awake()
     {
         if (instance == null)
@@ -25,6 +28,42 @@ public class WordManager : MonoBehaviour
     void Start()
     {
         SetNewSecretWord();
+
+        GameManager.onGameStateChanged += GameStateChanegedCallback;
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.onGameStateChanged -= GameStateChanegedCallback;
+    }
+
+    private void GameStateChanegedCallback(GameState gameState)
+    {
+        switch (gameState)
+        {
+            case GameState.Menu:
+
+              
+
+                break;
+
+
+            case GameState.Game:
+
+                if (shouldReset)
+                    SetNewSecretWord();
+
+               
+                break;
+
+            case GameState.LevelComplete:
+                shouldReset = true;
+                break;
+
+            case GameState.Gameover:
+                shouldReset = true;
+                break;
+        }
     }
 
     // Update is called once per frame
@@ -48,5 +87,7 @@ public class WordManager : MonoBehaviour
         int wordStarIndex = wordIndex * 7;
 
         secretWord = words.Substring(wordStarIndex, 5).ToUpper();
+
+        shouldReset = false;
     }
 }
