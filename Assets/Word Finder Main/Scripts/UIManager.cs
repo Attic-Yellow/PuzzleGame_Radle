@@ -12,6 +12,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private CanvasGroup gameCG;
     [SerializeField] private CanvasGroup levelCompleteCG;
     [SerializeField] private CanvasGroup gameoverCG;
+    [SerializeField] private CanvasGroup settingsCG;
 
     [Header(" Menu Elements ")]
     [SerializeField] private TextMeshProUGUI menuCoins;
@@ -51,11 +52,13 @@ public class UIManager : MonoBehaviour
         HideGameover();
 
         GameManager.onGameStateChanged += GameStateChanegedCallback;
+        DataManager.onCoinsUpdated += UpdateCoinsTexts;
     }
 
     private void onDestroy()
     {
         GameManager.onGameStateChanged -= GameStateChanegedCallback;
+        DataManager.onCoinsUpdated -= UpdateCoinsTexts;
     }
 
     private void GameStateChanegedCallback(GameState gameState)
@@ -94,6 +97,14 @@ public class UIManager : MonoBehaviour
     void Update()
     {
 
+    }
+
+    public void UpdateCoinsTexts()
+    {
+        menuCoins.text = DataManager.instance.GetCoins().ToString();
+        gameCoins.text = menuCoins.text;
+        levelCompleteCoins.text = menuCoins.text;
+        gameoverCoins.text = menuCoins.text;
     }
 
     private void ShowMenu()
@@ -148,6 +159,16 @@ public class UIManager : MonoBehaviour
     private void HideGameover()
     {
         HideCG(gameoverCG);
+    }
+
+    public void ShowSettings()
+    {
+        ShowCG(settingsCG);
+    }
+
+    public void HideSettings()
+    {
+        HideCG(settingsCG);
     }
 
     private void ShowCG(CanvasGroup cg)

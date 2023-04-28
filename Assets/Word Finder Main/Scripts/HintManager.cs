@@ -78,6 +78,10 @@ public class HintManager : MonoBehaviour
 
     public void KeyboardHint()
     {
+        if (DataManager.instance.GetCoins() < keyboardHintPrice)
+            return;
+
+
         string secretWord = WordManager.instance.GetSecretWord();
 
         List<KeyboardKey> untouchedKeys = new List<KeyboardKey>();
@@ -102,11 +106,16 @@ public class HintManager : MonoBehaviour
 
         int randomKeyIndex = Random.Range(0, t_untouchedKeys.Count);
         t_untouchedKeys[randomKeyIndex].SetInvalid();
+
+        DataManager.instance.RemoveCoins(keyboardHintPrice);
     }
 
     List<int> letterHintGivenIndices = new List<int>();
     public void LetterHint()
     {
+        if (DataManager.instance.GetCoins() < letterHintPrice)
+            return;
+
         if (letterHintGivenIndices.Count >= 5)
         {
             Debug.Log("All hints have been given");
@@ -128,5 +137,7 @@ public class HintManager : MonoBehaviour
         letterHintGivenIndices.Add(randomIndex);
 
         currentWordContainer.AddAsHint(randomIndex, secretWord[randomIndex]);
+
+        DataManager.instance.RemoveCoins(letterHintPrice);
     }
 }
