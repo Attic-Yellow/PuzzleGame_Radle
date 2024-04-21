@@ -14,13 +14,14 @@ public class SettingsManager : MonoBehaviour
     private bool soundsState;
     private bool hapticsState;
 
-    // Start is called before the first frame update
+
     void Start()
     {
         LoadStates();
+
     }
 
-    // Update is called once per frame
+
     void Update()
     {
 

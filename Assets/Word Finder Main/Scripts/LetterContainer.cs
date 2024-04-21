@@ -1,3 +1,5 @@
+using System;
+using System.Text;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,24 +11,24 @@ public class LetterContainer : MonoBehaviour
     [SerializeField] private SpriteRenderer letterContainer;
     [SerializeField] private TextMeshPro letter;
 
-    // Start is called before the first frame update
     void Start()
     {
 
     }
 
-    // Update is called once per frame
     void Update()
     {
 
     }
 
+    // 게임 입력창 초기화
     public void Initialize()
     {
         letter.text = "";
         letterContainer.color = Color.white;
     }
 
+    // 저장된 값을 출력함
     public void SetLetter(char letter, bool isHint = false)
     {
         if (isHint)
@@ -34,7 +36,7 @@ public class LetterContainer : MonoBehaviour
         else
             this.letter.color = Color.black;
 
-
+        // 초성, 중성, 종성을 조합하여 한글을 표시
         this.letter.text = letter.ToString();
     }
 
@@ -55,6 +57,14 @@ public class LetterContainer : MonoBehaviour
 
     public char GetLetter()
     {
-        return letter.text[0];
+        if (letter.text.Length > 0)
+        {
+            return letter.text[0];
+        }
+        else
+        {
+            // 예외 처리를 위해 공백 문자를 반환하거나 적절한 에러 메시지를 출력할 수 있습니다.
+            return ' ';
+        }
     }
 }

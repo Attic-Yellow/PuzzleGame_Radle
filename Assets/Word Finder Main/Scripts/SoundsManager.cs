@@ -21,7 +21,7 @@ public class SoundsManager : MonoBehaviour
             Destroy(gameObject);
     }
 
-    // Start is called before the first frame update
+
     void Start()
     {
         InputManager.onLetterAdded += PlayLetterAddedSound;
@@ -52,7 +52,7 @@ public class SoundsManager : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
+
     void Update()
     {
 

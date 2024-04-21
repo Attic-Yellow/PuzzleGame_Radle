@@ -5,18 +5,17 @@ using TMPro;
 
 public class HintManager : MonoBehaviour
 {
-    [Header(" Elements ")]
+    [Header("Elements")]
     [SerializeField] private GameObject keyboard;
     private KeyboardKey[] keys;
 
-    [Header(" Text Elements ")]
+    [Header("Text Elements")]
     [SerializeField] private TextMeshProUGUI keyboardPriceText;
     [SerializeField] private TextMeshProUGUI letterPriceText;
 
-    [Header(" Settings ")]
+    [Header("Settings")]
     [SerializeField] private int keyboardHintPrice;
     [SerializeField] private int letterHintPrice;
-
 
     private bool shouldReset;
 
@@ -25,7 +24,7 @@ public class HintManager : MonoBehaviour
         keys = keyboard.GetComponentsInChildren<KeyboardKey>();
     }
 
-    // Start is called before the first frame update
+
     void Start()
     {
         keyboardPriceText.text = keyboardHintPrice.ToString();
@@ -44,20 +43,14 @@ public class HintManager : MonoBehaviour
         switch (gameState)
         {
             case GameState.Menu:
-
-
                 break;
 
-
             case GameState.Game:
-
                 if (shouldReset)
                 {
                     letterHintGivenIndices.Clear();
                     shouldReset = false;
                 }
-                    
-
                 break;
 
             case GameState.LevelComplete:
@@ -70,7 +63,7 @@ public class HintManager : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
+
     void Update()
     {
 
@@ -78,9 +71,8 @@ public class HintManager : MonoBehaviour
 
     public void KeyboardHint()
     {
-        if (DataManager.instance.GetCoins() < keyboardHintPrice)
+        if (GameManager.instance.GetLocalCoins() < keyboardHintPrice)
             return;
-
 
         string secretWord = WordManager.instance.GetSecretWord();
 
@@ -90,8 +82,6 @@ public class HintManager : MonoBehaviour
             if (keys[i].IsUntouched())
                 untouchedKeys.Add(keys[i]);
 
-        // At this point, we have a list of all the untouched keys
-        // Let's remove the ones that are in the secret word to avoid graying them out
 
         List<KeyboardKey> t_untouchedKeys = new List<KeyboardKey>(untouchedKeys);
 
@@ -99,7 +89,6 @@ public class HintManager : MonoBehaviour
             if (secretWord.Contains(untouchedKeys[i].GetLetter()))
                 t_untouchedKeys.Remove(untouchedKeys[i]);
 
-        // At this point, we have a list of all the untouched keys, not contained into the secret word
 
         if (t_untouchedKeys.Count <= 0)
             return;
@@ -107,13 +96,13 @@ public class HintManager : MonoBehaviour
         int randomKeyIndex = Random.Range(0, t_untouchedKeys.Count);
         t_untouchedKeys[randomKeyIndex].SetInvalid();
 
-        DataManager.instance.RemoveCoins(keyboardHintPrice);
+        GameManager.instance.RemoveLocalCoins(keyboardHintPrice);
     }
 
     List<int> letterHintGivenIndices = new List<int>();
     public void LetterHint()
     {
-        if (DataManager.instance.GetCoins() < letterHintPrice)
+        if (GameManager.instance.GetLocalCoins() < letterHintPrice)
             return;
 
         if (letterHintGivenIndices.Count >= 5)
@@ -128,7 +117,6 @@ public class HintManager : MonoBehaviour
             if (!letterHintGivenIndices.Contains(i))
                 letterHintNotGivenIndices.Add(i);
 
-
         WordContainer currentWordContainer = InputManager.instance.GetCurrentWordContainer();
 
         string secretWord = WordManager.instance.GetSecretWord();
@@ -138,6 +126,6 @@ public class HintManager : MonoBehaviour
 
         currentWordContainer.AddAsHint(randomIndex, secretWord[randomIndex]);
 
-        DataManager.instance.RemoveCoins(letterHintPrice);
+        GameManager.instance.RemoveLocalCoins(letterHintPrice);
     }
 }

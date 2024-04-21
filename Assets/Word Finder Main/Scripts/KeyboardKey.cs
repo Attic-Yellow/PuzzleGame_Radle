@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using System;
 
-enum Validity { None, Valid, Potential, Invalid } 
+enum Validity { None, Valid, Potential, Invalid }
 
 public class KeyboardKey : MonoBehaviour
 {
@@ -16,21 +16,30 @@ public class KeyboardKey : MonoBehaviour
 
     [Header(" Settings ")]
     private Validity validity;
+    private Validity morphemeValidity;
 
     [Header(" Events ")]
     public static Action<char> onKeyPressed;
 
-    // Start is called before the first frame update
-    void Start()
+    private Button button;
+
+    private void Awake()
     {
-        GetComponent<Button>().onClick.AddListener(SendKeyPressedEvent);
-        Initialize();
+        button = GetComponent<Button>();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Start()
     {
+        if (button != null)
+        {
+            button.onClick.AddListener(SendKeyPressedEvent);
+        }
+        else
+        {
+            Debug.LogWarning("Button component is missing on the KeyboardKey object: " + gameObject.name);
+        }
 
+        Initialize();
     }
 
     private void SendKeyPressedEvent()
@@ -47,6 +56,7 @@ public class KeyboardKey : MonoBehaviour
     {
         renderer.color = Color.white;
         validity = Validity.None;
+        morphemeValidity = Validity.None;
     }
 
     public void SetValid()
@@ -58,22 +68,64 @@ public class KeyboardKey : MonoBehaviour
     public void SetPotential()
     {
         if (validity == Validity.Valid)
+        {
             return;
+        }
 
         renderer.color = Color.yellow;
-        validity= Validity.Potential;
+        validity = Validity.Potential;
     }
+
     public void SetInvalid()
     {
         if (validity == Validity.Valid || validity == Validity.Potential)
+        {
             return;
+        }
 
         renderer.color = Color.gray;
-        validity= Validity.Invalid;
+        validity = Validity.Invalid;
     }
 
     public bool IsUntouched()
     {
         return validity == Validity.None;
+    }
+
+    public void SetMorphemeValid(string morpheme)
+    {
+        if (morpheme.Equals(letterText.text))
+        {
+            renderer.color = Color.green;
+            validity = Validity.Valid;
+        }
+    }
+
+    public void SetMorphemePotential(string morpheme)
+    {
+        if (validity == Validity.Valid)
+        {
+            return;
+        }
+
+        if (morpheme.Equals(letterText.text))
+        {
+            renderer.color = Color.yellow;
+            validity = Validity.Potential;
+        }
+    }
+
+    public void SetMorphemeInvalid(string morpheme)
+    {
+        if (validity == Validity.Valid || validity == Validity.Potential)
+        {
+            return;
+        }
+
+        if (morpheme.Equals(letterText.text))
+        {
+            renderer.color = Color.gray;
+            validity = Validity.Invalid;
+        }
     }
 }

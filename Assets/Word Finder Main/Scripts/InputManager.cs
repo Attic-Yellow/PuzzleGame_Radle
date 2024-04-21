@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 
+
 public class InputManager : MonoBehaviour
 {
     public static InputManager instance;
@@ -22,6 +23,7 @@ public class InputManager : MonoBehaviour
     public static Action onLetterAdded;
     public static Action onLetterRemoved;
 
+
     public void Awake()
     {
         if (instance == null)
@@ -30,10 +32,10 @@ public class InputManager : MonoBehaviour
             Destroy(gameObject);
     }
 
-    // Start is called before the first frame update
+
     void Start()
     {
-        //연결되어 있음
+
         Initialize();
 
         KeyboardKey.onKeyPressed += KeyPressedCallback;
@@ -65,7 +67,7 @@ public class InputManager : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
+
     void Update()
     {
 
@@ -79,27 +81,44 @@ public class InputManager : MonoBehaviour
         DisableEnterButton();
 
         for (int i = 0; i < wordContainers.Length; i++)
-            // 연결 되어있음
+
             wordContainers[i].Initialize();
 
         shouldReset = false;
     }
 
+    //입력한 값을 wordContianer에 보냄 그리고 정답 칸이 모두 찼는지 확인
     private void KeyPressedCallback(char letter)
     {
+        int VowelCode = KoreanCharMaker.GetVowelCode(letter);
+
+
+        if (enterButton.interactable && (KoreanCharMaker.GetFinalConsonantCode(letter) != -1 || KoreanCharMaker.GetVowelCode(letter) != -1))
+        {
+            wordContainers[currentWordContaainerIndex].Add(letter);
+            HapticsManager.Vibrate();
+            onLetterAdded?.Invoke();
+            return;
+        }
+
         if (!canAddLetter)
             return;
 
-        wordContainers[currentWordContaainerIndex].Add(letter);
+        int initSoundCode = KoreanCharMaker.GetInitSoundCode(letter);
+        int vowelCode = KoreanCharMaker.GetVowelCode(letter);
+        int finalConsonantCode = KoreanCharMaker.GetFinalConsonantCode(letter);
 
-        HapticsManager.Vibrate();
 
-        if (wordContainers[currentWordContaainerIndex].IsComplete())
+        if (initSoundCode != -1 || vowelCode != -1 || finalConsonantCode != -1)
         {
-            canAddLetter= false;
-            EnableEnterButton();
-            //CheckWord();
-            //currentWordContaainerIndex++;
+            wordContainers[currentWordContaainerIndex].Add(letter);
+            HapticsManager.Vibrate();
+
+            if (wordContainers[currentWordContaainerIndex].IsComplete())
+            {
+                canAddLetter = false;
+                EnableEnterButton();
+            }
         }
 
         onLetterAdded?.Invoke();
@@ -110,6 +129,10 @@ public class InputManager : MonoBehaviour
         string wordToCheck = wordContainers[currentWordContaainerIndex].GetWord();
         string secretWord = WordManager.instance.GetSecretWord();
 
+
+        Debug.Log("Secret Word: " + secretWord);
+        Debug.Log("Word To Check: " + wordToCheck);
+
         wordContainers[currentWordContaainerIndex].Colorize(secretWord);
         keyboardColorizer.Colorize(secretWord, wordToCheck);
 
@@ -119,38 +142,45 @@ public class InputManager : MonoBehaviour
         }
         else
         {
-            //Debug.Log("Wrong Word");
+
             currentWordContaainerIndex++;
             DisableEnterButton();
 
             if (currentWordContaainerIndex >= wordContainers.Length)
             {
-                //Debug.Log("Gameover");
-                DataManager.instance.ResetScore();
+
+                GameManager.instance.ResetLocalScore();
                 GameManager.instance.SetGameState(GameState.Gameover);
             }
             else
             {
+                wordContainers[currentWordContaainerIndex].Initialize();
                 canAddLetter = true;
-                
             }
-
-            
         }
+
     }
 
     private void SetLevelComplete()
     {
         UpdateDate();
+
+
+        foreach (var wordContainer in wordContainers)
+        {
+            wordContainer.Reset();
+        }
+
         GameManager.instance.SetGameState(GameState.LevelComplete);
     }
+
 
     private void UpdateDate()
     {
         int scoreToAdd = 6 - currentWordContaainerIndex;
 
-        DataManager.instance.IncreaseScore(scoreToAdd);
-        DataManager.instance.AddCoins(scoreToAdd * 3);
+        GameManager.instance.IncreaseLocalScore(scoreToAdd);
+        GameManager.instance.AddLocalCoins(scoreToAdd * 3);
     }
 
     public void BackspacePressedCallback()

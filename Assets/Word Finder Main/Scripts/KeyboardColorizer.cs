@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
+using System;
 
 public class KeyboardColorizer : MonoBehaviour
 {
@@ -10,29 +12,40 @@ public class KeyboardColorizer : MonoBehaviour
     [Header(" Settings ")]
     private bool shouldReset;
 
+    private Dictionary<char, KeyboardKey> keyDictionary;
+
     private void Awake()
     {
         keys = GetComponentsInChildren<KeyboardKey>();
+
+        // 키보드의 키와 형태소를 매핑하는 딕셔너리 생성
+        keyDictionary = new Dictionary<char, KeyboardKey>();
+        foreach (KeyboardKey key in keys)
+        {
+            char letter = key.GetLetter();
+            if (!keyDictionary.ContainsKey(letter))
+            {
+                keyDictionary.Add(letter, key);
+            }
+        }
     }
 
-
-    // Start is called before the first frame update
     void Start()
     {
-        GameManager.onGameStateChanged += GameStateChanegedCallback;
+        GameManager.onGameStateChanged += GameStateChangedCallback;
     }
 
-    private void onDestroy()
+    private void OnDestroy()
     {
-        GameManager.onGameStateChanged -= GameStateChanegedCallback;
+        GameManager.onGameStateChanged -= GameStateChangedCallback;
     }
 
-    private void GameStateChanegedCallback(GameState gameState)
+    private void GameStateChangedCallback(GameState gameState)
     {
         switch (gameState)
         {
             case GameState.Game:
-                if (shouldReset) 
+                if (shouldReset)
                     Initialize();
                 break;
 
@@ -48,13 +61,14 @@ public class KeyboardColorizer : MonoBehaviour
 
     private void Initialize()
     {
-        for (int i = 0; i < keys.Length; i++)
-            keys[i].Initialize();
+        foreach (KeyboardKey key in keys)
+        {
+            key.Initialize();
+        }
 
         shouldReset = false;
     }
 
-    // Update is called once per frame
     void Update()
     {
 
@@ -62,34 +76,46 @@ public class KeyboardColorizer : MonoBehaviour
 
     public void Colorize(string secretWord, string wordToCheck)
     {
-        for (int i = 0; i < keys.Length; i++)
+
+        char[] secretLetters = KoreanCharMaker.SplitToLetters(secretWord);
+        char[] wordToCheckLetters = KoreanCharMaker.SplitToLetters(wordToCheck);
+
+
+        Dictionary<char, int> secretCounts = new Dictionary<char, int>();
+        foreach (char letter in secretLetters)
         {
-            char keyLetter = keys[i].GetLetter();
+            if (secretCounts.ContainsKey(letter))
+                secretCounts[letter]++;
+            else
+                secretCounts.Add(letter, 1);
+        }
 
-            for (int j = 0; j < wordToCheck.Length; j++)
+
+        for (int i = 0; i < wordToCheckLetters.Length; i++)
+        {
+            char letter = wordToCheckLetters[i];
+
+            if (keyDictionary.ContainsKey(letter))
             {
-                if (keyLetter != wordToCheck[j])
-                {
-                    continue;
-                    // the key letter we've prssed is equals to the current wordToCheck letter
-                }
+                KeyboardKey key = keyDictionary[letter];
 
-                if (keyLetter == secretWord[j])
+                if (i < secretLetters.Length && secretLetters[i] == letter)
                 {
-                    // Valid
-                    keys[i].SetValid();
+
+                    key.SetValid();
                 }
-                else if (secretWord.Contains(keyLetter))
+                else if (secretCounts.ContainsKey(letter))
                 {
-                    //Potential
-                    keys[i].SetPotential();
+
+                    key.SetPotential();
                 }
                 else
                 {
-                    // Invalid
-                    keys[i].SetInvalid();
+
+                    key.SetInvalid();
                 }
             }
         }
     }
+
 }

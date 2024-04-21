@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Text; 
 using UnityEngine;
 
 public class WordManager : MonoBehaviour
@@ -9,7 +10,7 @@ public class WordManager : MonoBehaviour
     [Header(" Elements ")]
     [SerializeField] private string secretWord;
     [SerializeField] private TextAsset wordsText;
-    private string words;
+    private string[] words;
 
     [Header(" Settings ")]
     private bool shouldReset;
@@ -21,14 +22,13 @@ public class WordManager : MonoBehaviour
         else
             Destroy(gameObject);
 
-        words = wordsText.text;
+        // UTF8로 인코딩된 한글 단어 목록을 제대로 처리하도록 수정
+        words = Encoding.UTF8.GetString(wordsText.bytes).Split('\n');
     }
 
-    // Start is called before the first frame update
     void Start()
     {
         SetNewSecretWord();
-
         GameManager.onGameStateChanged += GameStateChanegedCallback;
     }
 
@@ -42,52 +42,28 @@ public class WordManager : MonoBehaviour
         switch (gameState)
         {
             case GameState.Menu:
-
-              
-
                 break;
 
-
             case GameState.Game:
-
                 if (shouldReset)
                     SetNewSecretWord();
-
-               
                 break;
 
             case GameState.LevelComplete:
-                shouldReset = true;
-                break;
-
             case GameState.Gameover:
                 shouldReset = true;
                 break;
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     public string GetSecretWord()
     {
-        return secretWord.ToUpper();
+        return secretWord;
     }
 
     private void SetNewSecretWord()
     {
-        Debug.Log("String length : " + words. Length);
-        int wordCount = (words.Length + 2) / 7;
-
-        int wordIndex = Random.Range(0, wordCount);
-
-        int wordStarIndex = wordIndex * 7;
-
-        secretWord = words.Substring(wordStarIndex, 5).ToUpper();
-
+        secretWord = words[Random.Range(0, words.Length)].Trim();
         shouldReset = false;
     }
 }

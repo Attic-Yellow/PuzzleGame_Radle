@@ -273,6 +273,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   renderer: {fileID: 5855313771033227099}
   letterText: {fileID: 3900338793603639745}
+  isHangulMode: 0
 --- !u!114 &477487602578717490
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,24 +1,31 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
+using System;
+using UnityEngine.Networking;
 
 public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
 
     [Header(" Elements ")]
+    [SerializeField] private CanvasGroup loginCG;
+    [SerializeField] private CanvasGroup signupCG;
     [SerializeField] private CanvasGroup menuCG;
     [SerializeField] private CanvasGroup gameCG;
     [SerializeField] private CanvasGroup levelCompleteCG;
     [SerializeField] private CanvasGroup gameoverCG;
     [SerializeField] private CanvasGroup settingsCG;
+    [SerializeField] private CanvasGroup usersettingsCG;
+    [SerializeField] private CanvasGroup userRankingCG;
 
     [Header(" Menu Elements ")]
     [SerializeField] private TextMeshProUGUI menuCoins;
     [SerializeField] private TextMeshProUGUI menuBestScore;
 
-    [Header(" Level Complete Elementes ")]
+    [Header(" Level Complete Elements ")]
     [SerializeField] private TextMeshProUGUI levelCompleteCoins;
     [SerializeField] private TextMeshProUGUI levelCompleteSecretWord;
     [SerializeField] private TextMeshProUGUI levelCompleteScore;
@@ -33,6 +40,13 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI gameScore;
     [SerializeField] private TextMeshProUGUI gameCoins;
 
+    [Header(" Login and Signup Buttons ")]
+    [SerializeField] private Button loginButton;
+    [SerializeField] private Button signupButton;
+    [SerializeField] private Button logoutButton;
+
+    private bool isLoggedIn = false; // 로그인 상태를 나타내는 변수
+
     private void Awke()
     {
         if (instance == null)
@@ -42,32 +56,60 @@ public class UIManager : MonoBehaviour
     }
 
 
-    // Start is called before the first frame update
     void Start()
     {
-        //ShowGame();
+
         ShowMenu();
+        HideLogin();
+        HideSignup();
+        HideShowRanking();
         HideGame();
         HideLevelComplete();
         HideGameover();
 
+
         GameManager.onGameStateChanged += GameStateChanegedCallback;
-        DataManager.onCoinsUpdated += UpdateCoinsTexts;
+        GameManager.onCoinsUpdated += UpdateCoinsTexts;
     }
 
     private void onDestroy()
     {
         GameManager.onGameStateChanged -= GameStateChanegedCallback;
-        DataManager.onCoinsUpdated -= UpdateCoinsTexts;
+        GameManager.onCoinsUpdated -= UpdateCoinsTexts;
     }
 
     private void GameStateChanegedCallback(GameState gameState)
     {
-        switch(gameState)
+        switch (gameState)
         {
-            case GameState.Menu:
 
+            case GameState.Menu:
                 ShowMenu();
+                HideSettings();
+                HideShowUsersettings();
+                HideLogin();
+                HideSignup();
+                HideGame();
+                HideShowRanking();
+                UpdateLoginUI(); 
+                break;
+
+            case GameState.Login:
+
+                ShowLogin();
+                HideSettings();
+                HideShowUsersettings();
+                HideMenu();
+                HideGame();
+
+                break;
+
+            case GameState.Signup:
+
+                ShowSignup();
+                HideSettings();
+                HideShowUsersettings();
+                HideMenu();
                 HideGame();
 
                 break;
@@ -93,7 +135,6 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
 
@@ -101,18 +142,65 @@ public class UIManager : MonoBehaviour
 
     public void UpdateCoinsTexts()
     {
-        menuCoins.text = DataManager.instance.GetCoins().ToString();
+        menuCoins.text = GameManager.instance.GetLocalCoins().ToString();
         gameCoins.text = menuCoins.text;
         levelCompleteCoins.text = menuCoins.text;
         gameoverCoins.text = menuCoins.text;
     }
 
+    private void ShowLogin()
+    {
+        ShowCG(loginCG);
+    }
+
+    private void HideLogin()
+    {
+        HideCG(loginCG);
+    }
+
+    private void ShowSignup()
+    {
+
+        ShowCG(signupCG);
+    }
+
+    private void HideSignup()
+    {
+        HideCG(signupCG);
+    }
+
     private void ShowMenu()
     {
-        menuCoins.text = DataManager.instance.GetCoins().ToString();
-        menuBestScore.text = DataManager.instance.GetBestScore().ToString();
+        // 메뉴에 표시되는 코인과 최고 점수 텍스트 업데이트
+        menuCoins.text = GameManager.instance.GetLocalCoins().ToString();
+        menuBestScore.text = GameManager.instance.GetLocalBestScore().ToString();
 
+        // 메뉴 캔버스 그룹을 활성화
         ShowCG(menuCG);
+    }
+
+    private void UpdateLoginUI()
+    {
+        isLoggedIn = GameManager.instance.IsLoggedIn();
+
+        if (isLoggedIn) // 로그인 상태일 경우
+        {
+            // 로그인 상태에 따른 UI 업데이트를 여기에 추가하세요
+            loginButton.gameObject.SetActive(false);
+            signupButton.gameObject.SetActive(false);
+            logoutButton.gameObject.SetActive(true);
+
+            // 코인과 최고 점수 텍스트를 불러온 데이터로 업데이트
+            menuCoins.text = GameManager.instance.GetLocalCoins().ToString();
+            menuBestScore.text = GameManager.instance.GetLocalBestScore().ToString();
+        }
+        else // 비로그인 상태일 경우
+        {
+            // 비로그인 상태에 따른 UI 업데이트를 여기에 추가하세요
+            loginButton.gameObject.SetActive(true);
+            signupButton.gameObject.SetActive(true);
+            logoutButton.gameObject.SetActive(false);
+        }
     }
 
     private void HideMenu()
@@ -122,8 +210,9 @@ public class UIManager : MonoBehaviour
 
     private void ShowGame()
     {
-        gameCoins.text = DataManager.instance.GetCoins().ToString();
-        gameScore.text = DataManager.instance.GetScore().ToString();
+        gameCoins.text = GameManager.instance.GetLocalCoins().ToString();
+        gameScore.text = GameManager.instance.GetLocalScore().ToString();
+
         ShowCG(gameCG);
     }
 
@@ -134,11 +223,11 @@ public class UIManager : MonoBehaviour
 
     private void ShowLevelComplete()
     {
-        levelCompleteCoins.text = DataManager.instance.GetCoins().ToString();
+        levelCompleteCoins.text = GameManager.instance.GetLocalCoins().ToString();
         levelCompleteSecretWord.text = WordManager.instance.GetSecretWord();
-        levelCompleteScore.text = DataManager.instance.GetScore().ToString();
-        levelCompleteBestScore.text = DataManager.instance.GetBestScore().ToString();
-        
+        levelCompleteScore.text = GameManager.instance.GetLocalScore().ToString();
+        levelCompleteBestScore.text = GameManager.instance.GetLocalBestScore().ToString();
+
         ShowCG(levelCompleteCG);
     }
 
@@ -149,9 +238,9 @@ public class UIManager : MonoBehaviour
 
     private void ShowGameover()
     {
-        gameoverCoins.text = DataManager.instance.GetCoins().ToString();
+        gameoverCoins.text = GameManager.instance.GetLocalCoins().ToString();
         gameoverSecretWord.text = WordManager.instance.GetSecretWord();
-        gameoverBestScore.text = DataManager.instance.GetBestScore().ToString();
+        gameoverBestScore.text = GameManager.instance.GetLocalBestScore().ToString();
 
         ShowCG(gameoverCG);
     }
@@ -163,13 +252,46 @@ public class UIManager : MonoBehaviour
 
     public void ShowSettings()
     {
-        ShowCG(settingsCG);
+        isLoggedIn = GameManager.instance.IsLoggedIn();
+
+        if (isLoggedIn)
+        {
+            ShowCG(usersettingsCG);
+            HideCG(settingsCG);
+        }
+        else
+        {
+            ShowCG(settingsCG);
+            HideCG(usersettingsCG);
+        }
+        
     }
 
     public void HideSettings()
     {
         HideCG(settingsCG);
     }
+
+    public void ShowUsersettings()
+    {
+        ShowCG(usersettingsCG);
+    }
+
+    public void HideShowUsersettings()
+    {
+        HideCG(usersettingsCG);
+    }
+
+    public void ShowRanking()
+    {
+        ShowCG(userRankingCG);
+    }
+
+    public void HideShowRanking()
+    {
+        HideCG(userRankingCG);
+    }
+
 
     private void ShowCG(CanvasGroup cg)
     {
@@ -187,3 +309,4 @@ public class UIManager : MonoBehaviour
 
     }
 }
+
